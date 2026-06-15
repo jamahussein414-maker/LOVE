@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#ff4d88" />
+<title>Meidän peli ❤️</title>
+<style>
+  :root {
+    --pink: #ff4d88;
+    --pink-soft: #ff8fb3;
+    --blue: #5b8bff;
+    --blue-soft: #9db8ff;
+    --bg1: #ffe3ee;
+    --bg2: #ffd0e4;
+    --board: #ffffff;
+    --slot: #ffeef5;
+    --text: #5a2a40;
+    --shadow: rgba(255, 77, 136, 0.25);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: linear-gradient(160deg, var(--bg1), var(--bg2));
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 14px) 14px;
+  }
+
+  /* Floating hearts background */
+  .hearts-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .hearts-bg span {
+    position: absolute;
+    bottom: -40px;
+    font-size: 18px;
+    opacity: 0.35;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.4; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  h1 {
+    font-size: clamp(26px, 7vw, 38px);
+    margin: 8px 0 0;
+    text-align: center;
+    background: linear-gradient(90deg, var(--pink), #ff6f61);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: clamp(13px, 3.6vw, 16px);
+    opacity: 0.85;
+    margin: -4px 0 0;
+    line-height: 1.4;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(6px);
+    border-radius: 22px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 10px 30px var(--shadow);
+  }
+
+  /* Screens */
+  .screen { display: none; width: 100%; flex-direction: column; align-items: center; gap: 14px; }
+  .screen.active { display: flex; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  label { font-size: 14px; font-weight: 600; align-self: flex-start; margin-bottom: 4px; }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--pink-soft);
+    border-radius: 14px;
+    font-size: 16px;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type="text"]:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(255,77,136,0.15); }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 16px;
+    font-weight: 700;
+    transition: transform 0.12s ease, box-shadow 0.2s, filter 0.2s;
+    touch-action: manipulation;
+  }
+  button:active { transform: scale(0.96); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--pink), #ff6f9c);
+    color: #fff;
+    font-size: 18px;
+    padding: 15px 22px;
+    width: 100%;
+    box-shadow: 0 8px 20px var(--shadow);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.8);
+    color: var(--pink);
+    border: 2px solid var(--pink-soft);
+    font-size: 15px;
+    padding: 11px 18px;
+  }
+
+  .btn-row { display: flex; gap: 10px; width: 100%; }
+  .btn-row button { flex: 1; }
+
+  /* Scoreboard */
+  .scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+  .player {
+    flex: 1;
+    background: rgba(255,255,255,0.75);
+    border-radius: 16px;
+    padding: 10px 8px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    border: 3px solid transparent;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .player.turn { border-color: var(--pink); transform: translateY(-3px); }
+  .player.bot.turn { border-color: var(--blue); }
+  .player .who { font-size: 13px; font-weight: 700; }
+  .player .role { font-size: 11px; opacity: 0.7; }
+  .player .score { font-size: 26px; font-weight: 800; line-height: 1.1; }
+  .player.you .score { color: var(--pink); }
+  .player.bot .score { color: var(--blue); }
+  .vs { align-self: center; font-weight: 800; opacity: 0.5; }
+
+  .status {
+    text-align: center;
+    font-size: clamp(14px, 4vw, 17px);
+    font-weight: 600;
+    min-height: 24px;
+    line-height: 1.35;
+  }
+
+  /* Connect-four board */
+  .board {
+    --cols: 7;
+    width: 100%;
+    background: linear-gradient(135deg, #ffb6cf, #ff9ec0);
+    border-radius: 18px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 6px;
+    box-shadow: inset 0 4px 12px rgba(0,0,0,0.12), 0 8px 22px var(--shadow);
+    touch-action: manipulation;
+  }
+  .cell {
+    aspect-ratio: 1 / 1;
+    background: var(--slot);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
+    cursor: pointer;
+  }
+  .cell .disc {
+    width: 86%;
+    height: 86%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0);
+    font-size: 0;
+  }
+  .cell.filled .disc { animation: drop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  @keyframes drop {
+    0%   { transform: translateY(-340%) scale(1); }
+    70%  { transform: translateY(0) scale(1); }
+    85%  { transform: translateY(-8%) scale(1); }
+    100% { transform: translateY(0) scale(1); }
+  }
+  .cell.you .disc  { background: radial-gradient(circle at 35% 30%, #ff9ec0, var(--pink)); box-shadow: 0 2px 6px rgba(255,77,136,0.5); }
+  .cell.bot .disc  { background: radial-gradient(circle at 35% 30%, var(--blue-soft), var(--blue)); box-shadow: 0 2px 6px rgba(91,139,255,0.5); }
+  .cell.win .disc { animation: pulse 0.7s ease-in-out infinite alternate; box-shadow: 0 0 0 4px #fff, 0 0 18px gold; }
+  @keyframes pulse { from { transform: scale(0.9); } to { transform: scale(1.08); } }
+
+  .col-hint:hover { background: rgba(255,255,255,0.35); }
+
+  /* Love note */
+  .note {
+    width: 100%;
+    background: linear-gradient(135deg, #fff7fb, #ffe9f2);
+    border: 2px dashed var(--pink-soft);
+    border-radius: 16px;
+    padding: 14px 16px;
+    text-align: center;
+    font-size: clamp(14px, 4vw, 16px);
+    font-style: italic;
+    line-height: 1.5;
+    box-shadow: 0 6px 16px rgba(255,77,136,0.12);
+  }
+  .note b { font-style: normal; color: var(--pink); }
+
+  /* Win overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(90, 42, 64, 0.45);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    z-index: 50;
+  }
+  .overlay.active { display: flex; animation: fadeIn 0.4s ease; }
+  .overlay-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px 22px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .overlay-card .big { font-size: 54px; margin-bottom: 6px; }
+  .overlay-card h2 { margin: 0 0 8px; color: var(--pink); font-size: 24px; }
+  .overlay-card p { font-size: 15px; line-height: 1.55; margin: 0 0 18px; }
+
+  .foot { font-size: 12px; opacity: 0.6; text-align: center; margin-top: 6px; }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    top: -20px;
+    font-size: 20px;
+    z-index: 60;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+  }
+
+  @media (min-width: 520px) {
+    .app { max-width: 520px; }
+  }
+</style>
+</head>
+<body>
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="app">
+  <h1 id="mainTitle">Meidän peli ❤️</h1>
+
+  <!-- START SCREEN -->
+  <section class="screen active" id="startScreen">
+    <p class="subtitle" id="startSub">Pieni peli sinulle — pelaat minua vastaan, vaikka en ole paikalla 💌</p>
+    <div class="card">
+      <label for="herName">Sinun nimesi 💕</label>
+      <input type="text" id="herName" placeholder="Esim. Rakas" maxlength="16" />
+      <label for="hisName">Vastustajasi (minä) 🤖❤️</label>
+      <input type="text" id="hisName" placeholder="Esim. Sinun rakkaasi" maxlength="16" />
+      <button class="btn-primary" id="startBtn">Aloitetaan ❤️</button>
+    </div>
+    <p class="foot">Vihje: yhdistä neljä sydäntä riviin — pysty, vaaka tai vino.</p>
+  </section>
+
+  <!-- GAME SCREEN -->
+  <section class="screen" id="gameScreen">
+    <div class="scoreboard">
+      <div class="player you turn" id="pYou">
+        <div class="who" id="youName">Sinä</div>
+        <div class="role">💗 Pelaaja</div>
+        <div class="score" id="youScore">0</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="player bot" id="pBot">
+        <div class="who" id="botName">Robotti</div>
+        <div class="role">💙 Minun robottini</div>
+        <div class="score" id="botScore">0</div>
+      </div>
+    </div>
+
+    <div class="status" id="status">Sinun vuorosi 💗 — pudota sydän!</div>
+
+    <div class="board" id="board"></div>
+
+    <div class="note" id="note"></div>
+
+    <div class="btn-row">
+      <button class="btn-ghost" id="restartBtn">Uusi peli 🔄</button>
+      <button class="btn-ghost" id="homeBtn">Alkuun 🏠</button>
+    </div>
+    <p class="foot" id="foot"></p>
+  </section>
+</div>
+
+<!-- WIN OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="overlay-card">
+    <div class="big" id="ovEmoji">🎉</div>
+    <h2 id="ovTitle">Voitit!</h2>
+    <p id="ovText"></p>
+    <button class="btn-primary" id="ovBtn">Pelataan uudestaan 💞</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Config ----------
+  const ROWS = 6, COLS = 7, EMPTY = 0, YOU = 1, BOT = 2;
+
+  // Sweet little love notes shown as the game goes on.
+  const LOVE_NOTES = [
+    "Joka kerta kun pudotat sydämen, ajattelen sinua. 💗",
+    "Tämä robotti pelaa puolestani — mutta oikeasti haluan vain olla lähelläsi.",
+    "Hävisitpä tai voitit, sinä olet aina minun voittoni. 🏆",
+    "Muistatko ensimmäisen kerran kun nauroimme yhdessä? Minä muistan.",
+    "Sinun hymysi on paras peli, jonka tiedän. 😊",
+    "Vaikka olen kaukana, tämä peli pitää meidät yhdessä hetken. 🌍❤️",
+    "Olet rakkain ihminen koko maailmassa. Älä unohda sitä.",
+    "Kun et voi olla kanssani, anna robotin halata sinua minun puolestani. 🤖🤍"
+  ];
+
+  const WIN_MESSAGES = [
+    "Voitit minut — kuten voitit sydämeni jo kauan sitten. 💘",
+    "Olet liian hyvä! Mutta rakastan sitä sinussa. 🥰",
+    "Hyvin pelattu, rakkaani. Olen ylpeä sinusta. ✨"
+  ];
+  const LOSE_MESSAGES = [
+    "Robottini voitti tällä kertaa — mutta sinä voitat aina minun sydämeni. ❤️",
+    "Älä huoli, tämä on vain peli. Todellisuudessa me molemmat voitamme. 💞",
+    "Yritä uudestaan! Uskon sinuun aina. 💪💗"
+  ];
+  const DRAW_MESSAGES = [
+    "Tasapeli — ihan kuten me, täydellinen pari. 💑",
+    "Yhtä vahvoja molemmat. Juuri kuten meidän rakkautemme. ⚖️❤️"
+  ];
+
+  // ---------- State ----------
+  let grid = [];
+  let current = YOU;
+  let busy = false;
+  let gameOver = false;
+  let scores = { you: 0, bot: 0 };
+  let noteIndex = 0;
+  let names = { her: "Sinä", his: "Robotti" };
+
+  // ---------- Elements ----------
+  const el = (id) => document.getElementById(id);
+  const boardEl = el("board");
+  const statusEl = el("status");
+  const noteEl = el("note");
+
+  // ---------- Floating hearts background ----------
+  (function buildHearts() {
+    const bg = el("heartsBg");
+    const emojis = ["❤️","💕","💗","💞","💓","🤍","💘"];
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.textContent = emojis[i % emojis.length];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.fontSize = (14 + Math.random() * 22) + "px";
+      const dur = 9 + Math.random() * 12;
+      s.style.animationDuration = dur + "s";
+      s.style.animationDelay = (-Math.random() * dur) + "s";
+      bg.appendChild(s);
+    }
+  })();
+
+  // ---------- Screen helpers ----------
+  function show(screenId) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    el(screenId).classList.add("active");
+  }
+
+  // ---------- Start ----------
+  el("startBtn").addEventListener("click", () => {
+    const her = el("herName").value.trim() || "Sinä";
+    const his = el("hisName").value.trim() || "Robottini";
+    names.her = her;
+    names.his = his;
+    el("youName").textContent = her;
+    el("botName").textContent = his.length > 14 ? his.slice(0,14) : his;
+    el("foot").textContent = his + " pelaa puolestani — tehty rakkaudella sinulle, " + her + ". 💌";
+    scores = { you: 0, bot: 0 };
+    updateScores();
+    show("gameScreen");
+    newGame();
+  });
+
+  el("restartBtn").addEventListener("click", newGame);
+  el("ovBtn").addEventListener("click", () => { el("overlay").classList.remove("active"); newGame(); });
+  el("homeBtn").addEventListener("click", () => { el("overlay").classList.remove("active"); show("startScreen"); });
+
+  // ---------- Game setup ----------
+  function newGame() {
+    grid = Array.from({ length: ROWS }, () => Array(COLS).fill(EMPTY));
+    current = YOU;
+    busy = false;
+    gameOver = false;
+    buildBoard();
+    setTurnUI();
+    showNote();
+    statusEl.textContent = "Sinun vuorosi 💗 — kosketa saraketta!";
+  }
+
+  function buildBoard() {
+    boardEl.innerHTML = "";
+    boardEl.style.setProperty("--cols", COLS);
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+        const disc = document.createElement("div");
+        disc.className = "disc";
+        disc.textContent = "❤️";
+        cell.appendChild(disc);
+        cell.addEventListener("click", () => onColumnClick(c));
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function cellAt(r, c) {
+    return boardEl.children[r * COLS + c];
+  }
+
+  function showNote() {
+    noteEl.innerHTML = "💌 " + LOVE_NOTES[noteIndex % LOVE_NOTES.length];
+    noteIndex++;
+  }
+
+  // ---------- Player move ----------
+  function onColumnClick(c) {
+    if (busy || gameOver || current !== YOU) return;
+    const r = dropRow(c);
+    if (r < 0) return;
+    place(r, c, YOU);
+    if (checkEnd(YOU)) return;
+    current = BOT;
+    setTurnUI();
+    statusEl.textContent = names.his + " miettii… 🤖💭";
+    busy = true;
+    setTimeout(botMove, 650);
+  }
+
+  function dropRow(c) {
+    for (let r = ROWS - 1; r >= 0; r--) {
+      if (grid[r][c] === EMPTY) return r;
+    }
+    return -1;
+  }
+
+  function place(r, c, who) {
+    grid[r][c] = who;
+    const cell = cellAt(r, c);
+    cell.classList.add("filled", who === YOU ? "you" : "bot");
+    cell.querySelector(".disc").textContent = who === YOU ? "❤️" : "💙";
+  }
+
+  // ---------- Bot move ----------
+  function botMove() {
+    const c = chooseBotColumn();
+    const r = dropRow(c);
+    if (r < 0) { busy = false; return; }
+    place(r, c, BOT);
+    if (checkEnd(BOT)) { busy = false; return; }
+    current = YOU;
+    setTurnUI();
+    statusEl.textContent = "Sinun vuorosi 💗";
+    showNote();
+    busy = false;
+  }
+
+  // Smart-but-beatable AI: win if possible, block your win, else weighted toward center.
+  function chooseBotColumn() {
+    const valid = [];
+    for (let c = 0; c < COLS; c++) if (dropRow(c) >= 0) valid.push(c);
+
+    // 1) Take a winning move.
+    for (const c of valid) {
+      const r = dropRow(c);
+      grid[r][c] = BOT;
+      const win = isWin(r, c, BOT);
+      grid[r][c] = EMPTY;
+      if (win) return c;
+    }
+    // 2) Block player's winning move.
+    for (const c of valid) {
+      const r = dropRow(c);
+      grid[r][c] = YOU;
+      const win = isWin(r, c, YOU);
+      grid[r][c] = EMPTY;
+      if (win) return c;
+    }
+    // 3) Avoid giving you an immediate win on top (light look-ahead).
+    const safe = valid.filter(c => {
+      const r = dropRow(c);
+      grid[r][c] = BOT;
+      let bad = false;
+      if (r - 1 >= 0) {
+        grid[r - 1][c] = YOU;
+        if (isWin(r - 1, c, YOU)) bad = true;
+        grid[r - 1][c] = EMPTY;
+      }
+      grid[r][c] = EMPTY;
+      return !bad;
+    });
+    const pool = safe.length ? safe : valid;
+
+    // 4) Prefer center columns (weighted random keeps it fun & beatable).
+    const weights = pool.map(c => COLS - Math.abs(c - (COLS - 1) / 2) * 2);
+    let total = weights.reduce((a, b) => a + b, 0);
+    let pick = Math.random() * total;
+    for (let i = 0; i < pool.length; i++) {
+      pick -= weights[i];
+      if (pick <= 0) return pool[i];
+    }
+    return pool[0];
+  }
+
+  // ---------- Win detection ----------
+  const DIRS = [[0,1],[1,0],[1,1],[1,-1]];
+  function isWin(r, c, who) {
+    for (const [dr, dc] of DIRS) {
+      let count = 1;
+      count += run(r, c, dr, dc, who);
+      count += run(r, c, -dr, -dc, who);
+      if (count >= 4) return true;
+    }
+    return false;
+  }
+  function run(r, c, dr, dc, who) {
+    let n = 0, rr = r + dr, cc = c + dc;
+    while (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && grid[rr][cc] === who) {
+      n++; rr += dr; cc += dc;
+    }
+    return n;
+  }
+  function winningCells(r, c, who) {
+    for (const [dr, dc] of DIRS) {
+      const line = [[r, c]];
+      let rr = r + dr, cc = c + dc;
+      while (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && grid[rr][cc] === who) { line.push([rr, cc]); rr += dr; cc += dc; }
+      rr = r - dr; cc = c - dc;
+      while (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && grid[rr][cc] === who) { line.push([rr, cc]); rr -= dr; cc -= dc; }
+      if (line.length >= 4) return line;
+    }
+    return null;
+  }
+
+  function checkEnd(who) {
+    // find last placed cell for this player by scanning won line
+    let endLine = null;
+    for (let r = 0; r < ROWS && !endLine; r++)
+      for (let c = 0; c < COLS && !endLine; c++)
+        if (grid[r][c] === who) {
+          const line = winningCells(r, c, who);
+          if (line) endLine = line;
+        }
+    if (endLine) {
+      gameOver = true;
+      endLine.forEach(([r, c]) => cellAt(r, c).classList.add("win"));
+      if (who === YOU) { scores.you++; win("you"); }
+      else { scores.bot++; win("bot"); }
+      updateScores();
+      return true;
+    }
+    // draw?
+    if (grid.every(row => row.every(v => v !== EMPTY))) {
+      gameOver = true;
+      win("draw");
+      return true;
+    }
+    return false;
+  }
+
+  // ---------- End screen ----------
+  function win(result) {
+    const ov = el("overlay");
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    if (result === "you") {
+      el("ovEmoji").textContent = "🏆💖";
+      el("ovTitle").textContent = "Voitit, " + names.her + "!";
+      el("ovText").textContent = pick(WIN_MESSAGES);
+      statusEl.textContent = "Sinä voitit! 🎉";
+      confetti();
+    } else if (result === "bot") {
+      el("ovEmoji").textContent = "🤖💙";
+      el("ovTitle").textContent = names.his + " voitti";
+      el("ovText").textContent = pick(LOSE_MESSAGES);
+      statusEl.textContent = "Robotti voitti — yritä uudestaan! 💗";
+    } else {
+      el("ovEmoji").textContent = "💑";
+      el("ovTitle").textContent = "Tasapeli!";
+      el("ovText").textContent = pick(DRAW_MESSAGES);
+      statusEl.textContent = "Tasapeli! 🤝";
+    }
+    setTimeout(() => ov.classList.add("active"), 900);
+  }
+
+  function updateScores() {
+    el("youScore").textContent = scores.you;
+    el("botScore").textContent = scores.bot;
+  }
+
+  function setTurnUI() {
+    el("pYou").classList.toggle("turn", current === YOU && !gameOver);
+    el("pBot").classList.toggle("turn", current === BOT && !gameOver);
+  }
+
+  // ---------- Confetti ----------
+  function confetti() {
+    const emojis = ["❤️","💕","💗","✨","🎉","💖","🌸"];
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement("div");
+      s.className = "confetti";
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.fontSize = (16 + Math.random() * 18) + "px";
+      s.style.animationDuration = (2 + Math.random() * 2.5) + "s";
+      s.style.animationDelay = (Math.random() * 0.6) + "s";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 5000);
+    }
+  }
+
+  // ---------- Init ----------
+  show("startScreen");
+})();
+</script>
+</body>
+</html>
