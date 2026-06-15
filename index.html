@@ -283,7 +283,7 @@
 
   <!-- START / LOGIN -->
   <section class="screen active" id="startScreen">
-    <p class="subtitle" id="startSub">Tämä peli on vain sinulle, Elli. Syötä salasana avataksesi sen. 💛</p>
+    <p class="subtitle" id="startSub">No niin Elli 😏 syötä salasana — tiedät kyllä meidän päivän.</p>
     <div class="card">
       <div class="lock" id="lock">🔒</div>
       <label for="pw">Salasana</label>
@@ -298,14 +298,12 @@
   <section class="screen" id="gameScreen">
     <div class="scoreboard">
       <div class="player you turn" id="pYou">
-        <div class="who" id="youName">Sinä</div>
-        <div class="role">Pelaaja</div>
+        <div class="who" id="youName">Elli</div>
         <div class="score" id="youScore">0</div>
       </div>
       <div class="vs">VS</div>
       <div class="player bot" id="pBot">
-        <div class="who" id="botName">Robotti</div>
-        <div class="role">Minun robottini</div>
+        <div class="who" id="botName">Jama</div>
         <div class="score" id="botScore">0</div>
       </div>
     </div>
@@ -339,14 +337,14 @@
   const ROWS = 6, COLS = 7, EMPTY = 0, YOU = 1, BOT = 2;
 
   const LOVE_NOTES = [
-    "Joka kerta kun pudotat nappulan, ajattelen sinua.",
-    "Tämä robotti pelaa puolestani — mutta oikeasti haluan vain olla lähelläsi.",
-    "Hävisitpä tai voitit, sinä olet aina minun voittoni.",
-    "Muistatko ensimmäisen kerran, kun nauroimme yhdessä? Minä muistan.",
-    "Sinun hymysi on kaunein peli, jonka tiedän.",
-    "Vaikka olen kaukana, tämä peli pitää meidät hetken yhdessä.",
-    "Olet rakkain ihminen koko maailmassa. Älä unohda sitä.",
-    "Kun en voi olla kanssasi, anna robotin halata sinua minun puolestani."
+    "Tiedän mitä mietit nyt… ja kyllä, mä voitan tän 😏",
+    "Keskity peliin, älä muhun 😉",
+    "Sä näytät vaarallisen söpöltä kun keskityt noin 🥰",
+    "Pelaat hyvin… melkein yhtä hyvin kuin näytät 😏",
+    "Jama ei flirttaile. Mä kyllä 😉",
+    "Jos voitat, saat palkinnon. Kysy multa myöhemmin 😘",
+    "Yks siirto vielä, sit mietitään mitä illalla tehdään 😏",
+    "Älä jännitä — ehkä annan sun voittaa. Ehkä. 😌"
   ];
   const WIN_MESSAGES = [
     "Älä innostu liikaa 😌",
@@ -413,7 +411,7 @@
     el("pwError").textContent = "";
     el("youName").textContent = names.her;
     el("botName").textContent = names.his;
-    el("foot").textContent = names.his + " pelaa puolestani — tehty rakkaudella sinulle, " + names.her + ".";
+    el("foot").textContent = "Jama pelaa mun puolesta… mut salaa mä toivon että voitat 😉";
     scores = { you: 0, bot: 0 };
     updateScores();
     setTimeout(() => { show("gameScreen"); newGame(); }, 250);
