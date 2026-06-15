@@ -3,345 +3,304 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="theme-color" content="#ff4d88" />
-<title>Meidän peli ❤️</title>
+<meta name="theme-color" content="#1c1620" />
+<title>Meidän peli</title>
 <style>
   :root {
-    --pink: #ff4d88;
-    --pink-soft: #ff8fb3;
-    --blue: #5b8bff;
-    --blue-soft: #9db8ff;
-    --bg1: #ffe3ee;
-    --bg2: #ffd0e4;
-    --board: #ffffff;
-    --slot: #ffeef5;
-    --text: #5a2a40;
-    --shadow: rgba(255, 77, 136, 0.25);
+    --bg-1: #1b1419;
+    --bg-2: #241a23;
+    --bg-3: #2e2030;
+    --ink: #f2e9e6;
+    --muted: #b6a6ab;
+    --line: rgba(255, 255, 255, 0.10);
+    --glass: rgba(255, 255, 255, 0.045);
+    --glass-2: rgba(255, 255, 255, 0.07);
+    --rose: #e7a6b2;
+    --rose-deep: #c4798a;
+    --slate: #9bb6cf;
+    --slate-deep: #5f829e;
+    --gold: #dcb98e;
+    --shadow: rgba(0, 0, 0, 0.45);
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     min-height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: var(--text);
-    background: linear-gradient(160deg, var(--bg1), var(--bg2));
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 700px at 70% -10%, rgba(220,185,142,0.10), transparent 60%),
+      radial-gradient(900px 600px at 10% 110%, rgba(231,166,178,0.10), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+    background-attachment: fixed;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 14px) 14px;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; min-height: 100dvh;
+    padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 20px) 16px;
   }
 
-  /* Floating hearts background */
-  .hearts-bg {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-  }
+  /* Subtle floating hearts */
+  .hearts-bg { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
   .hearts-bg span {
-    position: absolute;
-    bottom: -40px;
-    font-size: 18px;
-    opacity: 0.35;
+    position: absolute; bottom: -30px;
+    color: var(--rose); opacity: 0; filter: blur(0.2px);
     animation: floatUp linear infinite;
   }
   @keyframes floatUp {
-    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
-    10%  { opacity: 0.4; }
-    90%  { opacity: 0.4; }
-    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    0% { transform: translateY(0) rotate(0); opacity: 0; }
+    12% { opacity: 0.16; }
+    88% { opacity: 0.16; }
+    100% { transform: translateY(-108vh) rotate(220deg); opacity: 0; }
   }
 
   .app {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    position: relative; z-index: 1;
+    width: 100%; max-width: 460px;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
   }
 
+  .brand { text-align: center; margin-top: 10px; }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.85; margin-bottom: 8px; font-weight: 600;
+  }
   h1 {
-    font-size: clamp(26px, 7vw, 38px);
-    margin: 8px 0 0;
-    text-align: center;
-    background: linear-gradient(90deg, var(--pink), #ff6f61);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 2px 12px var(--shadow);
+    font-family: Georgia, "Times New Roman", "Playfair Display", serif;
+    font-weight: 500; font-style: italic;
+    font-size: clamp(30px, 8vw, 44px);
+    margin: 0; line-height: 1.05; letter-spacing: 0.3px;
+    background: linear-gradient(180deg, #fbf3ef, #e7c3c9 60%, var(--rose-deep));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
 
   .subtitle {
-    text-align: center;
-    font-size: clamp(13px, 3.6vw, 16px);
-    opacity: 0.85;
-    margin: -4px 0 0;
-    line-height: 1.4;
+    text-align: center; color: var(--muted);
+    font-size: clamp(13px, 3.6vw, 15px); line-height: 1.55;
+    margin: 0; max-width: 34ch;
   }
 
   .card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(6px);
-    border-radius: 22px;
-    padding: 20px;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 22px;
     width: 100%;
-    box-shadow: 0 10px 30px var(--shadow);
+    box-shadow: 0 18px 50px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
   }
 
-  /* Screens */
-  .screen { display: none; width: 100%; flex-direction: column; align-items: center; gap: 14px; }
-  .screen.active { display: flex; animation: fadeIn 0.5s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .screen { display: none; width: 100%; flex-direction: column; align-items: center; gap: 18px; }
+  .screen.active { display: flex; animation: rise 0.55s cubic-bezier(0.22,1,0.36,1); }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-  label { font-size: 14px; font-weight: 600; align-self: flex-start; margin-bottom: 4px; }
+  label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--muted); align-self: flex-start; margin: 0 0 7px 2px;
+  }
   input[type="text"] {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid var(--pink-soft);
-    border-radius: 14px;
-    font-size: 16px;
-    background: #fff;
-    color: var(--text);
-    outline: none;
-    margin-bottom: 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; padding: 13px 15px; margin-bottom: 16px;
+    border: 1px solid var(--line); border-radius: 13px;
+    font-size: 16px; font-family: inherit;
+    background: rgba(0,0,0,0.22); color: var(--ink);
+    outline: none; transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
   }
-  input[type="text"]:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(255,77,136,0.15); }
+  input[type="text"]::placeholder { color: rgba(182,166,171,0.55); }
+  input[type="text"]:focus {
+    border-color: var(--rose);
+    box-shadow: 0 0 0 4px rgba(231,166,178,0.13);
+    background: rgba(0,0,0,0.3);
+  }
 
   button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    border-radius: 16px;
-    font-weight: 700;
-    transition: transform 0.12s ease, box-shadow 0.2s, filter 0.2s;
+    font-family: inherit; cursor: pointer; border: none; border-radius: 14px;
+    font-weight: 600; letter-spacing: 0.02em;
+    transition: transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s, filter 0.25s, background 0.25s;
     touch-action: manipulation;
   }
-  button:active { transform: scale(0.96); }
+  button:active { transform: scale(0.97); }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--pink), #ff6f9c);
-    color: #fff;
-    font-size: 18px;
-    padding: 15px 22px;
-    width: 100%;
-    box-shadow: 0 8px 20px var(--shadow);
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color: #2a161c; font-size: 16px; padding: 15px 22px; width: 100%;
+    box-shadow: 0 12px 28px rgba(196,121,138,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
   }
-  .btn-ghost {
-    background: rgba(255,255,255,0.8);
-    color: var(--pink);
-    border: 2px solid var(--pink-soft);
-    font-size: 15px;
-    padding: 11px 18px;
-  }
+  .btn-primary:hover { filter: brightness(1.05); box-shadow: 0 16px 34px rgba(196,121,138,0.45); }
 
-  .btn-row { display: flex; gap: 10px; width: 100%; }
+  .btn-ghost {
+    background: var(--glass-2); color: var(--ink);
+    border: 1px solid var(--line); font-size: 14px; padding: 12px 16px;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.11); }
+
+  .btn-row { display: flex; gap: 11px; width: 100%; }
   .btn-row button { flex: 1; }
 
+  .hint { font-size: 12px; color: var(--muted); opacity: 0.8; text-align: center; }
+
   /* Scoreboard */
-  .scoreboard {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 10px;
-    width: 100%;
-  }
+  .scoreboard { display: flex; align-items: stretch; gap: 11px; width: 100%; }
   .player {
-    flex: 1;
-    background: rgba(255,255,255,0.75);
-    border-radius: 16px;
-    padding: 10px 8px;
-    text-align: center;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-    border: 3px solid transparent;
-    transition: border-color 0.25s, transform 0.25s;
+    flex: 1; border-radius: 16px; padding: 12px 8px; text-align: center;
+    background: var(--glass); border: 1px solid var(--line);
+    position: relative; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   }
-  .player.turn { border-color: var(--pink); transform: translateY(-3px); }
-  .player.bot.turn { border-color: var(--blue); }
-  .player .who { font-size: 13px; font-weight: 700; }
-  .player .role { font-size: 11px; opacity: 0.7; }
-  .player .score { font-size: 26px; font-weight: 800; line-height: 1.1; }
-  .player.you .score { color: var(--pink); }
-  .player.bot .score { color: var(--blue); }
-  .vs { align-self: center; font-weight: 800; opacity: 0.5; }
+  .player::after {
+    content: ""; position: absolute; left: 50%; bottom: -1px; height: 2px; width: 0;
+    transform: translateX(-50%); border-radius: 2px; transition: width 0.35s ease;
+  }
+  .player.you.turn { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(231,166,178,0.18); }
+  .player.you.turn::after { width: 60%; background: var(--rose); }
+  .player.bot.turn { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(155,182,207,0.18); }
+  .player.bot.turn::after { width: 60%; background: var(--slate); }
+  .player .who { font-size: 13px; font-weight: 700; letter-spacing: 0.01em; }
+  .player .role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .player .score { font-size: 28px; font-weight: 700; line-height: 1.15; margin-top: 4px; }
+  .player.you .score { color: var(--rose); }
+  .player.bot .score { color: var(--slate); }
+  .vs { align-self: center; font-size: 12px; font-weight: 600; letter-spacing: 0.2em; color: var(--muted); opacity: 0.7; }
 
   .status {
-    text-align: center;
-    font-size: clamp(14px, 4vw, 17px);
-    font-weight: 600;
-    min-height: 24px;
-    line-height: 1.35;
+    text-align: center; font-size: clamp(13px, 3.8vw, 15px);
+    font-weight: 500; color: var(--ink); min-height: 22px; letter-spacing: 0.01em;
   }
 
-  /* Connect-four board */
+  /* Board */
   .board {
     --cols: 7;
-    width: 100%;
-    background: linear-gradient(135deg, #ffb6cf, #ff9ec0);
-    border-radius: 18px;
-    padding: 8px;
-    display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
-    gap: 6px;
-    box-shadow: inset 0 4px 12px rgba(0,0,0,0.12), 0 8px 22px var(--shadow);
+    width: 100%; padding: 10px; border-radius: 20px;
+    display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 7px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 50px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
     touch-action: manipulation;
   }
   .cell {
-    aspect-ratio: 1 / 1;
-    background: var(--slot);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0;
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
-    cursor: pointer;
+    aspect-ratio: 1/1; border-radius: 50%; position: relative; cursor: pointer;
+    background: radial-gradient(circle at 50% 45%, rgba(0,0,0,0.32), rgba(0,0,0,0.12));
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.45), inset 0 -1px 1px rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
   }
+  .cell:hover { background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.08), rgba(0,0,0,0.12)); }
   .cell .disc {
-    width: 86%;
-    height: 86%;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: scale(0);
-    font-size: 0;
+    width: 84%; height: 84%; border-radius: 50%; transform: scale(0);
   }
-  .cell.filled .disc { animation: drop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  .cell.filled .disc { animation: drop 0.42s cubic-bezier(0.34,1.4,0.5,1) forwards; }
   @keyframes drop {
-    0%   { transform: translateY(-340%) scale(1); }
-    70%  { transform: translateY(0) scale(1); }
-    85%  { transform: translateY(-8%) scale(1); }
+    0% { transform: translateY(-360%) scale(1); }
+    72% { transform: translateY(0) scale(1); }
+    84% { transform: translateY(-7%) scale(1); }
     100% { transform: translateY(0) scale(1); }
   }
-  .cell.you .disc  { background: radial-gradient(circle at 35% 30%, #ff9ec0, var(--pink)); box-shadow: 0 2px 6px rgba(255,77,136,0.5); }
-  .cell.bot .disc  { background: radial-gradient(circle at 35% 30%, var(--blue-soft), var(--blue)); box-shadow: 0 2px 6px rgba(91,139,255,0.5); }
-  .cell.win .disc { animation: pulse 0.7s ease-in-out infinite alternate; box-shadow: 0 0 0 4px #fff, 0 0 18px gold; }
-  @keyframes pulse { from { transform: scale(0.9); } to { transform: scale(1.08); } }
-
-  .col-hint:hover { background: rgba(255,255,255,0.35); }
+  .cell.you .disc {
+    background: radial-gradient(circle at 35% 28%, #f7d3da, var(--rose) 55%, var(--rose-deep));
+    box-shadow: 0 3px 10px rgba(196,121,138,0.5), inset 0 2px 3px rgba(255,255,255,0.55);
+  }
+  .cell.bot .disc {
+    background: radial-gradient(circle at 35% 28%, #d7e6f2, var(--slate) 55%, var(--slate-deep));
+    box-shadow: 0 3px 10px rgba(95,130,158,0.5), inset 0 2px 3px rgba(255,255,255,0.5);
+  }
+  .cell.win .disc { animation: glow 1s ease-in-out infinite alternate; }
+  @keyframes glow {
+    from { box-shadow: 0 0 0 2px var(--gold), 0 0 10px rgba(220,185,142,0.4); transform: scale(0.96); }
+    to { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgba(220,185,142,0.85); transform: scale(1.05); }
+  }
 
   /* Love note */
   .note {
-    width: 100%;
-    background: linear-gradient(135deg, #fff7fb, #ffe9f2);
-    border: 2px dashed var(--pink-soft);
-    border-radius: 16px;
-    padding: 14px 16px;
-    text-align: center;
-    font-size: clamp(14px, 4vw, 16px);
-    font-style: italic;
-    line-height: 1.5;
-    box-shadow: 0 6px 16px rgba(255,77,136,0.12);
+    width: 100%; border-radius: 15px; padding: 14px 18px; text-align: center;
+    font-family: Georgia, "Times New Roman", serif; font-style: italic;
+    font-size: clamp(13px, 3.8vw, 15px); line-height: 1.6; color: #eddfe0;
+    background: linear-gradient(135deg, rgba(231,166,178,0.10), rgba(220,185,142,0.06));
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--rose);
   }
-  .note b { font-style: normal; color: var(--pink); }
 
-  /* Win overlay */
+  /* Overlay */
   .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(90, 42, 64, 0.45);
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 22px;
-    z-index: 50;
+    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    padding: 24px; z-index: 50;
+    background: rgba(10,7,10,0.6);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
-  .overlay.active { display: flex; animation: fadeIn 0.4s ease; }
+  .overlay.active { display: flex; animation: rise 0.4s ease; }
   .overlay-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 28px 22px;
-    max-width: 380px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    width: 100%; max-width: 360px; text-align: center; padding: 30px 24px;
+    border-radius: 22px;
+    background: linear-gradient(160deg, rgba(46,32,48,0.96), rgba(27,20,25,0.96));
+    border: 1px solid rgba(220,185,142,0.25);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    animation: pop 0.5s cubic-bezier(0.34,1.4,0.5,1);
   }
-  @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .overlay-card .big { font-size: 54px; margin-bottom: 6px; }
-  .overlay-card h2 { margin: 0 0 8px; color: var(--pink); font-size: 24px; }
-  .overlay-card p { font-size: 15px; line-height: 1.55; margin: 0 0 18px; }
+  @keyframes pop { from { transform: scale(0.86); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .overlay-card .big { font-size: 44px; margin-bottom: 8px; }
+  .overlay-card h2 {
+    margin: 0 0 10px; font-family: Georgia, serif; font-style: italic; font-weight: 500;
+    font-size: 25px; color: #fbf3ef;
+  }
+  .overlay-card p { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0 0 20px; }
 
-  .foot { font-size: 12px; opacity: 0.6; text-align: center; margin-top: 6px; }
+  .foot { font-size: 11px; color: var(--muted); opacity: 0.7; text-align: center; line-height: 1.5; }
 
-  /* Confetti */
-  .confetti {
-    position: fixed;
-    top: -20px;
-    font-size: 20px;
-    z-index: 60;
-    pointer-events: none;
-    animation: fall linear forwards;
-  }
-  @keyframes fall {
-    to { transform: translateY(110vh) rotate(540deg); opacity: 0; }
-  }
+  .confetti { position: fixed; top: -20px; z-index: 60; pointer-events: none; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); opacity: 0; } }
 
-  @media (min-width: 520px) {
-    .app { max-width: 520px; }
-  }
+  @media (min-width: 540px) { .app { max-width: 500px; } }
 </style>
 </head>
 <body>
 <div class="hearts-bg" id="heartsBg"></div>
 
 <div class="app">
-  <h1 id="mainTitle">Meidän peli ❤️</h1>
+  <div class="brand">
+    <div class="kicker">Sinulle &middot; rakkaudella</div>
+    <h1 id="mainTitle">Meidän peli</h1>
+  </div>
 
-  <!-- START SCREEN -->
+  <!-- START -->
   <section class="screen active" id="startScreen">
-    <p class="subtitle" id="startSub">Pieni peli sinulle — pelaat minua vastaan, vaikka en ole paikalla 💌</p>
+    <p class="subtitle" id="startSub">Pieni peli, jossa pelaat minua vastaan — vaikka en juuri nyt olisikaan vieressäsi.</p>
     <div class="card">
-      <label for="herName">Sinun nimesi 💕</label>
-      <input type="text" id="herName" placeholder="Esim. Rakas" maxlength="16" />
-      <label for="hisName">Vastustajasi (minä) 🤖❤️</label>
-      <input type="text" id="hisName" placeholder="Esim. Sinun rakkaasi" maxlength="16" />
-      <button class="btn-primary" id="startBtn">Aloitetaan ❤️</button>
+      <label for="herName">Sinun nimesi</label>
+      <input type="text" id="herName" placeholder="esim. Rakas" maxlength="16" autocomplete="off" />
+      <label for="hisName">Vastustajasi — minä</label>
+      <input type="text" id="hisName" placeholder="esim. Sinun rakkaasi" maxlength="16" autocomplete="off" />
+      <button class="btn-primary" id="startBtn">Aloita peli</button>
     </div>
-    <p class="foot">Vihje: yhdistä neljä sydäntä riviin — pysty, vaaka tai vino.</p>
+    <p class="hint">Yhdistä neljä omaa nappulaa riviin — pysty, vaaka tai vino.</p>
   </section>
 
-  <!-- GAME SCREEN -->
+  <!-- GAME -->
   <section class="screen" id="gameScreen">
     <div class="scoreboard">
       <div class="player you turn" id="pYou">
         <div class="who" id="youName">Sinä</div>
-        <div class="role">💗 Pelaaja</div>
+        <div class="role">Pelaaja</div>
         <div class="score" id="youScore">0</div>
       </div>
       <div class="vs">VS</div>
       <div class="player bot" id="pBot">
         <div class="who" id="botName">Robotti</div>
-        <div class="role">💙 Minun robottini</div>
+        <div class="role">Minun robottini</div>
         <div class="score" id="botScore">0</div>
       </div>
     </div>
 
-    <div class="status" id="status">Sinun vuorosi 💗 — pudota sydän!</div>
-
+    <div class="status" id="status">Sinun vuorosi — valitse sarake</div>
     <div class="board" id="board"></div>
-
     <div class="note" id="note"></div>
 
     <div class="btn-row">
-      <button class="btn-ghost" id="restartBtn">Uusi peli 🔄</button>
-      <button class="btn-ghost" id="homeBtn">Alkuun 🏠</button>
+      <button class="btn-ghost" id="restartBtn">Uusi peli</button>
+      <button class="btn-ghost" id="homeBtn">Alkuun</button>
     </div>
     <p class="foot" id="foot"></p>
   </section>
@@ -350,10 +309,10 @@
 <!-- WIN OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="overlay-card">
-    <div class="big" id="ovEmoji">🎉</div>
-    <h2 id="ovTitle">Voitit!</h2>
+    <div class="big" id="ovEmoji">&#10084;&#65039;</div>
+    <h2 id="ovTitle">Voitit</h2>
     <p id="ovText"></p>
-    <button class="btn-primary" id="ovBtn">Pelataan uudestaan 💞</button>
+    <button class="btn-primary" id="ovBtn">Pelaa uudestaan</button>
   </div>
 </div>
 
@@ -361,82 +320,66 @@
 (() => {
   "use strict";
 
-  // ---------- Config ----------
   const ROWS = 6, COLS = 7, EMPTY = 0, YOU = 1, BOT = 2;
 
-  // Sweet little love notes shown as the game goes on.
   const LOVE_NOTES = [
-    "Joka kerta kun pudotat sydämen, ajattelen sinua. 💗",
+    "Joka kerta kun pudotat nappulan, ajattelen sinua.",
     "Tämä robotti pelaa puolestani — mutta oikeasti haluan vain olla lähelläsi.",
-    "Hävisitpä tai voitit, sinä olet aina minun voittoni. 🏆",
-    "Muistatko ensimmäisen kerran kun nauroimme yhdessä? Minä muistan.",
-    "Sinun hymysi on paras peli, jonka tiedän. 😊",
-    "Vaikka olen kaukana, tämä peli pitää meidät yhdessä hetken. 🌍❤️",
+    "Hävisitpä tai voitit, sinä olet aina minun voittoni.",
+    "Muistatko ensimmäisen kerran, kun nauroimme yhdessä? Minä muistan.",
+    "Sinun hymysi on kaunein peli, jonka tiedän.",
+    "Vaikka olen kaukana, tämä peli pitää meidät hetken yhdessä.",
     "Olet rakkain ihminen koko maailmassa. Älä unohda sitä.",
-    "Kun et voi olla kanssani, anna robotin halata sinua minun puolestani. 🤖🤍"
+    "Kun en voi olla kanssasi, anna robotin halata sinua minun puolestani."
   ];
-
   const WIN_MESSAGES = [
-    "Voitit minut — kuten voitit sydämeni jo kauan sitten. 💘",
-    "Olet liian hyvä! Mutta rakastan sitä sinussa. 🥰",
-    "Hyvin pelattu, rakkaani. Olen ylpeä sinusta. ✨"
+    "Voitit minut — kuten voitit sydämeni jo kauan sitten.",
+    "Olet liian hyvä. Ja juuri sitä rakastan sinussa.",
+    "Hienosti pelattu, rakkaani. Olen ylpeä sinusta."
   ];
   const LOSE_MESSAGES = [
-    "Robottini voitti tällä kertaa — mutta sinä voitat aina minun sydämeni. ❤️",
-    "Älä huoli, tämä on vain peli. Todellisuudessa me molemmat voitamme. 💞",
-    "Yritä uudestaan! Uskon sinuun aina. 💪💗"
+    "Robottini vei tämän erän — mutta sinä voitat aina sydämeni.",
+    "Älä huoli, tämä on vain peli. Oikeasti me molemmat voitamme.",
+    "Yritä uudestaan. Uskon sinuun aina."
   ];
   const DRAW_MESSAGES = [
-    "Tasapeli — ihan kuten me, täydellinen pari. 💑",
-    "Yhtä vahvoja molemmat. Juuri kuten meidän rakkautemme. ⚖️❤️"
+    "Tasapeli — aivan kuten me, täydellinen pari.",
+    "Yhtä vahvoja molemmat. Niin kuin meidän rakkautemme."
   ];
 
-  // ---------- State ----------
-  let grid = [];
-  let current = YOU;
-  let busy = false;
-  let gameOver = false;
-  let scores = { you: 0, bot: 0 };
-  let noteIndex = 0;
+  let grid = [], current = YOU, busy = false, gameOver = false;
+  let scores = { you: 0, bot: 0 }, noteIndex = 0;
   let names = { her: "Sinä", his: "Robotti" };
 
-  // ---------- Elements ----------
   const el = (id) => document.getElementById(id);
-  const boardEl = el("board");
-  const statusEl = el("status");
-  const noteEl = el("note");
+  const boardEl = el("board"), statusEl = el("status"), noteEl = el("note");
 
-  // ---------- Floating hearts background ----------
   (function buildHearts() {
     const bg = el("heartsBg");
-    const emojis = ["❤️","💕","💗","💞","💓","🤍","💘"];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 10; i++) {
       const s = document.createElement("span");
-      s.textContent = emojis[i % emojis.length];
+      s.textContent = "♥";
       s.style.left = Math.random() * 100 + "vw";
-      s.style.fontSize = (14 + Math.random() * 22) + "px";
-      const dur = 9 + Math.random() * 12;
+      s.style.fontSize = (12 + Math.random() * 20) + "px";
+      const dur = 14 + Math.random() * 14;
       s.style.animationDuration = dur + "s";
       s.style.animationDelay = (-Math.random() * dur) + "s";
       bg.appendChild(s);
     }
   })();
 
-  // ---------- Screen helpers ----------
-  function show(screenId) {
+  function show(id) {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    el(screenId).classList.add("active");
+    el(id).classList.add("active");
   }
 
-  // ---------- Start ----------
   el("startBtn").addEventListener("click", () => {
     const her = el("herName").value.trim() || "Sinä";
     const his = el("hisName").value.trim() || "Robottini";
-    names.her = her;
-    names.his = his;
+    names.her = her; names.his = his;
     el("youName").textContent = her;
-    el("botName").textContent = his.length > 14 ? his.slice(0,14) : his;
-    el("foot").textContent = his + " pelaa puolestani — tehty rakkaudella sinulle, " + her + ". 💌";
+    el("botName").textContent = his.length > 14 ? his.slice(0, 14) : his;
+    el("foot").textContent = his + " pelaa puolestani — tehty rakkaudella sinulle, " + her + ".";
     scores = { you: 0, bot: 0 };
     updateScores();
     show("gameScreen");
@@ -447,16 +390,11 @@
   el("ovBtn").addEventListener("click", () => { el("overlay").classList.remove("active"); newGame(); });
   el("homeBtn").addEventListener("click", () => { el("overlay").classList.remove("active"); show("startScreen"); });
 
-  // ---------- Game setup ----------
   function newGame() {
     grid = Array.from({ length: ROWS }, () => Array(COLS).fill(EMPTY));
-    current = YOU;
-    busy = false;
-    gameOver = false;
-    buildBoard();
-    setTurnUI();
-    showNote();
-    statusEl.textContent = "Sinun vuorosi 💗 — kosketa saraketta!";
+    current = YOU; busy = false; gameOver = false;
+    buildBoard(); setTurnUI(); showNote();
+    statusEl.textContent = "Sinun vuorosi — valitse sarake";
   }
 
   function buildBoard() {
@@ -466,11 +404,9 @@
       for (let c = 0; c < COLS; c++) {
         const cell = document.createElement("div");
         cell.className = "cell";
-        cell.dataset.r = r;
-        cell.dataset.c = c;
+        cell.dataset.r = r; cell.dataset.c = c;
         const disc = document.createElement("div");
         disc.className = "disc";
-        disc.textContent = "❤️";
         cell.appendChild(disc);
         cell.addEventListener("click", () => onColumnClick(c));
         boardEl.appendChild(cell);
@@ -478,33 +414,27 @@
     }
   }
 
-  function cellAt(r, c) {
-    return boardEl.children[r * COLS + c];
-  }
+  const cellAt = (r, c) => boardEl.children[r * COLS + c];
 
   function showNote() {
-    noteEl.innerHTML = "💌 " + LOVE_NOTES[noteIndex % LOVE_NOTES.length];
+    noteEl.textContent = LOVE_NOTES[noteIndex % LOVE_NOTES.length];
     noteIndex++;
   }
 
-  // ---------- Player move ----------
   function onColumnClick(c) {
     if (busy || gameOver || current !== YOU) return;
     const r = dropRow(c);
     if (r < 0) return;
     place(r, c, YOU);
     if (checkEnd(YOU)) return;
-    current = BOT;
-    setTurnUI();
-    statusEl.textContent = names.his + " miettii… 🤖💭";
+    current = BOT; setTurnUI();
+    statusEl.textContent = names.his + " miettii…";
     busy = true;
-    setTimeout(botMove, 650);
+    setTimeout(botMove, 680);
   }
 
   function dropRow(c) {
-    for (let r = ROWS - 1; r >= 0; r--) {
-      if (grid[r][c] === EMPTY) return r;
-    }
+    for (let r = ROWS - 1; r >= 0; r--) if (grid[r][c] === EMPTY) return r;
     return -1;
   }
 
@@ -512,86 +442,57 @@
     grid[r][c] = who;
     const cell = cellAt(r, c);
     cell.classList.add("filled", who === YOU ? "you" : "bot");
-    cell.querySelector(".disc").textContent = who === YOU ? "❤️" : "💙";
   }
 
-  // ---------- Bot move ----------
   function botMove() {
     const c = chooseBotColumn();
     const r = dropRow(c);
     if (r < 0) { busy = false; return; }
     place(r, c, BOT);
     if (checkEnd(BOT)) { busy = false; return; }
-    current = YOU;
-    setTurnUI();
-    statusEl.textContent = "Sinun vuorosi 💗";
+    current = YOU; setTurnUI();
+    statusEl.textContent = "Sinun vuorosi";
     showNote();
     busy = false;
   }
 
-  // Smart-but-beatable AI: win if possible, block your win, else weighted toward center.
   function chooseBotColumn() {
     const valid = [];
     for (let c = 0; c < COLS; c++) if (dropRow(c) >= 0) valid.push(c);
-
-    // 1) Take a winning move.
     for (const c of valid) {
       const r = dropRow(c);
-      grid[r][c] = BOT;
-      const win = isWin(r, c, BOT);
-      grid[r][c] = EMPTY;
-      if (win) return c;
+      grid[r][c] = BOT; const w = isWin(r, c, BOT); grid[r][c] = EMPTY;
+      if (w) return c;
     }
-    // 2) Block player's winning move.
     for (const c of valid) {
       const r = dropRow(c);
-      grid[r][c] = YOU;
-      const win = isWin(r, c, YOU);
-      grid[r][c] = EMPTY;
-      if (win) return c;
+      grid[r][c] = YOU; const w = isWin(r, c, YOU); grid[r][c] = EMPTY;
+      if (w) return c;
     }
-    // 3) Avoid giving you an immediate win on top (light look-ahead).
     const safe = valid.filter(c => {
       const r = dropRow(c);
-      grid[r][c] = BOT;
-      let bad = false;
-      if (r - 1 >= 0) {
-        grid[r - 1][c] = YOU;
-        if (isWin(r - 1, c, YOU)) bad = true;
-        grid[r - 1][c] = EMPTY;
-      }
-      grid[r][c] = EMPTY;
-      return !bad;
+      grid[r][c] = BOT; let bad = false;
+      if (r - 1 >= 0) { grid[r-1][c] = YOU; if (isWin(r-1, c, YOU)) bad = true; grid[r-1][c] = EMPTY; }
+      grid[r][c] = EMPTY; return !bad;
     });
     const pool = safe.length ? safe : valid;
-
-    // 4) Prefer center columns (weighted random keeps it fun & beatable).
     const weights = pool.map(c => COLS - Math.abs(c - (COLS - 1) / 2) * 2);
-    let total = weights.reduce((a, b) => a + b, 0);
-    let pick = Math.random() * total;
-    for (let i = 0; i < pool.length; i++) {
-      pick -= weights[i];
-      if (pick <= 0) return pool[i];
-    }
+    let total = weights.reduce((a, b) => a + b, 0), pick = Math.random() * total;
+    for (let i = 0; i < pool.length; i++) { pick -= weights[i]; if (pick <= 0) return pool[i]; }
     return pool[0];
   }
 
-  // ---------- Win detection ----------
   const DIRS = [[0,1],[1,0],[1,1],[1,-1]];
   function isWin(r, c, who) {
     for (const [dr, dc] of DIRS) {
-      let count = 1;
-      count += run(r, c, dr, dc, who);
-      count += run(r, c, -dr, -dc, who);
-      if (count >= 4) return true;
+      let n = 1 + run(r, c, dr, dc, who) + run(r, c, -dr, -dc, who);
+      if (n >= 4) return true;
     }
     return false;
   }
   function run(r, c, dr, dc, who) {
     let n = 0, rr = r + dr, cc = c + dc;
-    while (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && grid[rr][cc] === who) {
-      n++; rr += dr; cc += dc;
-    }
+    while (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && grid[rr][cc] === who) { n++; rr += dr; cc += dc; }
     return n;
   }
   function winningCells(r, c, who) {
@@ -607,53 +508,42 @@
   }
 
   function checkEnd(who) {
-    // find last placed cell for this player by scanning won line
     let endLine = null;
     for (let r = 0; r < ROWS && !endLine; r++)
       for (let c = 0; c < COLS && !endLine; c++)
-        if (grid[r][c] === who) {
-          const line = winningCells(r, c, who);
-          if (line) endLine = line;
-        }
+        if (grid[r][c] === who) { const l = winningCells(r, c, who); if (l) endLine = l; }
     if (endLine) {
       gameOver = true;
       endLine.forEach(([r, c]) => cellAt(r, c).classList.add("win"));
-      if (who === YOU) { scores.you++; win("you"); }
-      else { scores.bot++; win("bot"); }
+      if (who === YOU) { scores.you++; finish("you"); } else { scores.bot++; finish("bot"); }
       updateScores();
       return true;
     }
-    // draw?
-    if (grid.every(row => row.every(v => v !== EMPTY))) {
-      gameOver = true;
-      win("draw");
-      return true;
-    }
+    if (grid.every(row => row.every(v => v !== EMPTY))) { gameOver = true; finish("draw"); return true; }
     return false;
   }
 
-  // ---------- End screen ----------
-  function win(result) {
+  function finish(result) {
     const ov = el("overlay");
-    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const pick = (a) => a[Math.floor(Math.random() * a.length)];
     if (result === "you") {
-      el("ovEmoji").textContent = "🏆💖";
-      el("ovTitle").textContent = "Voitit, " + names.her + "!";
+      el("ovEmoji").textContent = "🏆";
+      el("ovTitle").textContent = "Voitit, " + names.her;
       el("ovText").textContent = pick(WIN_MESSAGES);
-      statusEl.textContent = "Sinä voitit! 🎉";
+      statusEl.textContent = "Sinä voitit.";
       confetti();
     } else if (result === "bot") {
-      el("ovEmoji").textContent = "🤖💙";
+      el("ovEmoji").textContent = "🤖";
       el("ovTitle").textContent = names.his + " voitti";
       el("ovText").textContent = pick(LOSE_MESSAGES);
-      statusEl.textContent = "Robotti voitti — yritä uudestaan! 💗";
+      statusEl.textContent = "Robotti voitti — yritä uudestaan.";
     } else {
-      el("ovEmoji").textContent = "💑";
-      el("ovTitle").textContent = "Tasapeli!";
+      el("ovEmoji").textContent = "❤️";
+      el("ovTitle").textContent = "Tasapeli";
       el("ovText").textContent = pick(DRAW_MESSAGES);
-      statusEl.textContent = "Tasapeli! 🤝";
+      statusEl.textContent = "Tasapeli.";
     }
-    setTimeout(() => ov.classList.add("active"), 900);
+    setTimeout(() => ov.classList.add("active"), 950);
   }
 
   function updateScores() {
@@ -666,23 +556,23 @@
     el("pBot").classList.toggle("turn", current === BOT && !gameOver);
   }
 
-  // ---------- Confetti ----------
   function confetti() {
-    const emojis = ["❤️","💕","💗","✨","🎉","💖","🌸"];
-    for (let i = 0; i < 40; i++) {
+    const items = ["♥", "♦", "✧", "•"];
+    const colors = ["#e7a6b2", "#dcb98e", "#9bb6cf", "#f7d3da"];
+    for (let i = 0; i < 36; i++) {
       const s = document.createElement("div");
       s.className = "confetti";
-      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.textContent = items[Math.floor(Math.random() * items.length)];
+      s.style.color = colors[Math.floor(Math.random() * colors.length)];
       s.style.left = Math.random() * 100 + "vw";
-      s.style.fontSize = (16 + Math.random() * 18) + "px";
-      s.style.animationDuration = (2 + Math.random() * 2.5) + "s";
-      s.style.animationDelay = (Math.random() * 0.6) + "s";
+      s.style.fontSize = (12 + Math.random() * 16) + "px";
+      s.style.animationDuration = (2.2 + Math.random() * 2.4) + "s";
+      s.style.animationDelay = (Math.random() * 0.5) + "s";
       document.body.appendChild(s);
-      setTimeout(() => s.remove(), 5000);
+      setTimeout(() => s.remove(), 5200);
     }
   }
 
-  // ---------- Init ----------
   show("startScreen");
 })();
 </script>
