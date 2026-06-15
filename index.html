@@ -138,37 +138,68 @@
 
   .note { width: 100%; border-radius: 15px; padding: 14px 18px; text-align: center; font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: clamp(13px, 3.8vw, 15px); line-height: 1.6; color: #eddfe0; background: linear-gradient(135deg, rgba(231,166,178,0.10), rgba(220,185,142,0.06)); border: 1px solid var(--line); border-left: 2px solid var(--rose); }
 
-  /* Penalty game */
-  .pen-stats { display: flex; gap: 11px; width: 100%; }
-  .pen-stats .stat { flex: 1; text-align: center; background: var(--glass); border: 1px solid var(--line); border-radius: 14px; padding: 10px; font-size: 13px; color: var(--muted); }
-  .pen-stats .stat b { display: block; font-size: 24px; color: var(--ink); margin-top: 2px; }
-  .pen-stats .stat.goals b { color: var(--rose); }
+  /* ===== Penalty scene ===== */
+  .penboard { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .prow { display: flex; align-items: center; gap: 9px; }
+  .prow .ptag { width: 44px; font-size: 12px; font-weight: 700; }
+  .prow.you .ptag { color: var(--rose); }
+  .prow.bot .ptag { color: var(--slate); }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 15px; height: 15px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid var(--line); transition: background 0.25s, transform 0.25s, box-shadow 0.25s; }
+  .prow.you .dot.on { background: var(--green); box-shadow: 0 0 10px rgba(143,212,166,0.6); transform: scale(1.12); }
+  .prow.bot .dot.on { background: var(--slate); box-shadow: 0 0 10px rgba(155,182,207,0.6); transform: scale(1.12); }
 
-  .goalwrap { width: 100%; }
-  .goal {
-    position: relative; width: 100%; aspect-ratio: 16/9; margin-bottom: 56px;
-    border: 5px solid #f3ede9; border-bottom: none; border-radius: 8px 8px 0 0;
-    background:
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 22px),
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 22px),
-      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.18));
-    box-shadow: 0 16px 40px var(--shadow), inset 0 2px 14px rgba(0,0,0,0.3);
-    overflow: visible;
-  }
-  .zones { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); gap: 4px; padding: 4px; z-index: 3; }
-  .zone { border-radius: 8px; cursor: pointer; transition: background 0.18s, box-shadow 0.18s; }
-  .zone:hover { background: rgba(231,166,178,0.16); box-shadow: inset 0 0 0 1px rgba(231,166,178,0.5); }
+  .scene { position: relative; width: 100%; aspect-ratio: 16/10; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 18px 44px var(--shadow); user-select: none; -webkit-user-select: none; }
+  .stands { position: absolute; left: 0; right: 0; top: 0; height: 21%; background-color: #2c2733;
+    background-image:
+      radial-gradient(circle at 5px 6px, rgba(231,166,178,0.55) 0 2.5px, transparent 3px),
+      radial-gradient(circle at 15px 12px, rgba(155,182,207,0.5) 0 2.5px, transparent 3px),
+      radial-gradient(circle at 25px 5px, rgba(220,185,142,0.5) 0 2.5px, transparent 3px);
+    background-size: 30px 18px; box-shadow: inset 0 -6px 12px rgba(0,0,0,0.4); }
+  .pitch { position: absolute; left: 0; right: 0; top: 16%; bottom: 0;
+    background: repeating-linear-gradient(0deg, #3f8a37 0 9%, #47983f 9% 18%); box-shadow: inset 0 8px 18px rgba(0,0,0,0.18); }
+  .pitch::after { content: ""; position: absolute; left: 50%; top: 82%; width: 13%; aspect-ratio: 1; transform: translate(-50%,-50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.85) 0 14%, transparent 16%); }
+
+  .goalframe { position: absolute; left: 24%; top: 13%; width: 52%; height: 36%; border: 5px solid #f4f1ec; border-bottom: none; border-radius: 4px 4px 0 0; z-index: 2; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
+  .net { position: absolute; inset: 0; opacity: 0.7; background-color: rgba(255,255,255,0.04);
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 9px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.30) 0 1px, transparent 1px 9px); }
+
+  .zones { position: absolute; left: 24%; top: 13%; width: 52%; height: 36%; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); z-index: 7; }
+  .zone { cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+  .zone:hover { background: rgba(231,166,178,0.22); box-shadow: inset 0 0 0 2px rgba(231,166,178,0.65); }
   .pitch-disabled .zone { cursor: default; }
   .pitch-disabled .zone:hover { background: none; box-shadow: none; }
 
-  .keeper { position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%); font-size: clamp(34px, 11vw, 52px); z-index: 2; transition: left 0.32s cubic-bezier(0.5,0,0.3,1.4), top 0.32s cubic-bezier(0.5,0,0.3,1.4); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); pointer-events: none; }
-  .ball { position: absolute; left: 50%; top: 128%; transform: translate(-50%,-50%); font-size: clamp(26px, 8vw, 38px); z-index: 4; transition: left 0.42s ease-out, top 0.42s ease-out, transform 0.42s ease-out; pointer-events: none; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.55)); }
+  .keeper { position: absolute; left: 50%; top: 40%; width: 9%; aspect-ratio: 1/1.7; transform: translate(-50%,-50%); z-index: 5;
+    transition: left 0.32s cubic-bezier(0.4,0,0.25,1.3), top 0.32s cubic-bezier(0.4,0,0.25,1.3), transform 0.32s cubic-bezier(0.4,0,0.25,1.3);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+  .keeper .head { position: absolute; left: 50%; top: -4%; width: 46%; aspect-ratio: 1; border-radius: 50%; background: #e8bd95; transform: translateX(-50%); z-index: 3; }
+  .keeper .body { position: absolute; left: 50%; top: 28%; width: 66%; height: 44%; border-radius: 7px; background: #26262e; transform: translateX(-50%); z-index: 2; }
+  .keeper .arm { position: absolute; top: 30%; width: 48%; height: 13%; background: #26262e; border-radius: 7px; z-index: 1; }
+  .keeper .arm.l { left: -26%; transform-origin: right center; transform: rotate(-42deg); }
+  .keeper .arm.r { right: -26%; transform-origin: left center; transform: rotate(42deg); }
+  .keeper .glove { position: absolute; top: 18%; width: 26%; aspect-ratio: 1; border-radius: 50%; background: #86acdf; z-index: 4; }
+  .keeper .glove.l { left: -30%; } .keeper .glove.r { right: -30%; }
+  .keeper .leg { position: absolute; top: 68%; width: 24%; height: 32%; background: #1c1c22; border-radius: 4px; z-index: 1; }
+  .keeper .leg.l { left: 22%; } .keeper .leg.r { right: 22%; }
 
-  .flash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: clamp(26px, 9vw, 44px); letter-spacing: 0.04em; opacity: 0; pointer-events: none; z-index: 5; }
+  .striker { position: absolute; left: 43%; top: 80%; width: 10%; aspect-ratio: 1/1.7; transform: translate(-50%,-50%); z-index: 4; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+  .striker .head { position: absolute; left: 50%; top: -4%; width: 44%; aspect-ratio: 1; border-radius: 50%; background: #eac28b; transform: translateX(-50%); z-index: 3; }
+  .striker .body { position: absolute; left: 50%; top: 28%; width: 64%; height: 44%; border-radius: 7px; background: #c0392b; transform: translateX(-50%); z-index: 2; }
+  .striker .leg { position: absolute; top: 68%; width: 24%; height: 32%; background: #20202a; border-radius: 4px; z-index: 1; }
+  .striker .leg.l { left: 22%; } .striker .leg.r { right: 22%; }
+
+  .ball { position: absolute; left: 50%; top: 84%; transform: translate(-50%,-50%); font-size: clamp(22px, 6.5vw, 32px); line-height: 1; z-index: 6;
+    transition: left 0.42s ease-out, top 0.42s ease-out, transform 0.42s ease-out; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+
+  .flash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: clamp(24px, 8vw, 40px); letter-spacing: 0.04em; opacity: 0; pointer-events: none; z-index: 8; }
   .flash.show { animation: flashpop 1s ease forwards; }
   @keyframes flashpop { 0% { opacity: 0; transform: scale(0.6); } 25% { opacity: 1; transform: scale(1.05); } 75% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
-  .flash.goal { color: var(--green); text-shadow: 0 0 24px rgba(143,212,166,0.6); }
-  .flash.save { color: var(--slate); text-shadow: 0 0 24px rgba(155,182,207,0.6); }
+  .flash.goal { color: #aef0c2; text-shadow: 0 0 24px rgba(143,212,166,0.8); }
+  .flash.save { color: #bcd6f0; text-shadow: 0 0 24px rgba(155,182,207,0.8); }
 
   /* Overlay */
   .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50; background: rgba(10,7,10,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -248,18 +279,28 @@
 
   <!-- PENALTY -->
   <section class="screen" id="penaltyScreen">
-    <div class="pen-stats">
-      <div class="stat goals">Maalit<b id="penGoals">0</b></div>
-      <div class="stat">Potku<b><span id="penShot">0</span>/5</b></div>
+    <div class="penboard">
+      <div class="prow you"><span class="ptag">Elli</span><div class="dots" id="dotsYou"></div></div>
+      <div class="prow bot"><span class="ptag">Jama</span><div class="dots" id="dotsBot"></div></div>
     </div>
     <div class="status" id="penStatus">Valitse mihin potkaiset ⚽</div>
-    <div class="goalwrap">
-      <div class="goal" id="goal">
-        <div class="zones" id="zones"></div>
-        <div class="keeper" id="keeper">🧤</div>
-        <div class="ball" id="ball">⚽</div>
-        <div class="flash" id="flash"></div>
+    <div class="scene" id="scene">
+      <div class="stands"></div>
+      <div class="pitch"></div>
+      <div class="goalframe"><div class="net"></div></div>
+      <div class="zones" id="zones"></div>
+      <div class="keeper" id="keeper">
+        <div class="arm l"></div><div class="arm r"></div>
+        <div class="glove l"></div><div class="glove r"></div>
+        <div class="head"></div><div class="body"></div>
+        <div class="leg l"></div><div class="leg r"></div>
       </div>
+      <div class="striker">
+        <div class="head"></div><div class="body"></div>
+        <div class="leg l"></div><div class="leg r"></div>
+      </div>
+      <div class="ball" id="ball">⚽</div>
+      <div class="flash" id="flash"></div>
     </div>
     <div class="btn-row">
       <button class="btn-ghost" id="penRestart">Uudestaan</button>
@@ -415,30 +456,41 @@
 
   /* ================= PENALTY SHOOTOUT ================= */
   const PEN_TOTAL = 5;
-  const ZX = [18, 50, 82], ZY = [33, 64];   // zone centers (% of goal)
+  const ZX = [33, 50, 67], ZY = [24, 42];   // zone centers (% of scene)
   let penShots = 0, penGoals = 0, penBusy = false, lastShot = -1;
-  const zonesEl = el("zones"), keeperEl = el("keeper"), ballEl = el("ball"), flashEl = el("flash"), penStatus = el("penStatus");
+  const zonesEl = el("zones"), keeperEl = el("keeper"), ballEl = el("ball"), flashEl = el("flash"), penStatus = el("penStatus"), sceneEl = el("scene");
 
   (function buildZones() {
     for (let i = 0; i < 6; i++) { const z = document.createElement("div"); z.className = "zone"; z.dataset.zone = i; z.addEventListener("click", () => shoot(i)); zonesEl.appendChild(z); }
   })();
-
   el("penRestart").addEventListener("click", startPenalty);
 
+  function buildDots() {
+    const dy = el("dotsYou"), db = el("dotsBot"); dy.innerHTML = ""; db.innerHTML = "";
+    for (let i = 0; i < PEN_TOTAL; i++) {
+      const a = document.createElement("span"); a.className = "dot"; dy.appendChild(a);
+      const b = document.createElement("span"); b.className = "dot"; db.appendChild(b);
+    }
+  }
   function startPenalty() {
     penShots = 0; penGoals = 0; penBusy = false; lastShot = -1;
-    el("penGoals").textContent = "0"; el("penShot").textContent = "0";
-    el("goal").classList.remove("pitch-disabled");
-    resetBall(); keeperPos(1, 0); // center-ish
+    buildDots(); sceneEl.classList.remove("pitch-disabled");
+    resetBall(); keeperReady();
     penStatus.textContent = "Valitse mihin potkaiset ⚽";
   }
   function zoneXY(i) { return { x: ZX[i % 3], y: ZY[Math.floor(i / 3)] }; }
-  function keeperPos(col, row) { keeperEl.style.left = ZX[col] + "%"; keeperEl.style.top = (ZY[row] + 6) + "%"; }
-  function resetBall() { ballEl.style.transition = "none"; ballEl.style.left = "50%"; ballEl.style.top = "128%"; ballEl.style.transform = "translate(-50%,-50%) rotate(0deg)"; void ballEl.offsetWidth; ballEl.style.transition = ""; }
+  function keeperReady() { keeperEl.style.left = "50%"; keeperEl.style.top = "40%"; keeperEl.style.transform = "translate(-50%,-50%) rotate(0deg)"; }
+  function keeperDive(zone) {
+    const col = zone % 3, row = Math.floor(zone / 3);
+    const deg = col === 0 ? -62 : (col === 2 ? 62 : 0);
+    keeperEl.style.left = ZX[col] + "%"; keeperEl.style.top = ZY[row] + "%";
+    keeperEl.style.transform = "translate(-50%,-50%) rotate(" + deg + "deg)";
+  }
+  function resetBall() { ballEl.style.transition = "none"; ballEl.style.left = "50%"; ballEl.style.top = "84%"; ballEl.style.transform = "translate(-50%,-50%) rotate(0deg)"; void ballEl.offsetWidth; ballEl.style.transition = ""; }
 
   function chooseKeeperZone() {
     // Jama is a decent keeper: often guesses near your previous shot, otherwise random.
-    if (lastShot >= 0 && Math.random() < 0.45) {
+    if (lastShot >= 0 && Math.random() < 0.42) {
       const opts = [lastShot];
       if (lastShot % 3 > 0) opts.push(lastShot - 1);
       if (lastShot % 3 < 2) opts.push(lastShot + 1);
@@ -449,25 +501,22 @@
 
   function shoot(zone) {
     if (penBusy || penShots >= PEN_TOTAL) return;
-    penBusy = true;
-    el("goal").classList.add("pitch-disabled");
+    penBusy = true; sceneEl.classList.add("pitch-disabled");
     const keeperZone = chooseKeeperZone();
     const t = zoneXY(zone);
-    ballEl.style.left = t.x + "%"; ballEl.style.top = t.y + "%"; ballEl.style.transform = "translate(-50%,-50%) rotate(420deg)";
-    keeperPos(keeperZone % 3, Math.floor(keeperZone / 3));
-    const saved = (zone === keeperZone);
-    lastShot = zone;
+    ballEl.style.left = t.x + "%"; ballEl.style.top = t.y + "%"; ballEl.style.transform = "translate(-50%,-50%) rotate(440deg)";
+    keeperDive(keeperZone);
+    const saved = (zone === keeperZone); lastShot = zone;
 
     setTimeout(() => {
-      penShots++;
-      el("penShot").textContent = String(penShots);
-      if (saved) { flash("TORJUNTA!", "save"); penStatus.textContent = "Jama torjui! 🧤"; }
-      else { penGoals++; el("penGoals").textContent = String(penGoals); flash("MAALI!", "goal"); penStatus.textContent = "MAALI! ⚽"; confetti(); }
+      const idx = penShots; penShots++;
+      if (saved) { el("dotsBot").children[idx].classList.add("on"); flash("TORJUNTA!", "save"); penStatus.textContent = "Jama torjui! 🧤"; }
+      else { penGoals++; el("dotsYou").children[idx].classList.add("on"); flash("MAALI!", "goal"); penStatus.textContent = "MAALI! ⚽"; confetti(); }
       setTimeout(() => {
         if (penShots >= PEN_TOTAL) { finishPenalty(); }
-        else { resetBall(); keeperPos(1, 0); penBusy = false; el("goal").classList.remove("pitch-disabled"); penStatus.textContent = "Seuraava potku ⚽"; }
+        else { resetBall(); keeperReady(); penBusy = false; sceneEl.classList.remove("pitch-disabled"); penStatus.textContent = "Seuraava potku ⚽"; }
       }, 1100);
-    }, 430);
+    }, 440);
   }
 
   function flash(text, cls) { flashEl.className = "flash " + cls; flashEl.textContent = text; void flashEl.offsetWidth; flashEl.classList.add("show"); }
