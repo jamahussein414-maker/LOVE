@@ -325,6 +325,22 @@
   const PASSWORD = "27112022";
   const el = (id) => document.getElementById(id);
 
+  /* ---- Kävijäseuranta: pelikerrat, maa, päivä & kellonaika (GoatCounter, ilmainen) ----
+     1) Luo ilmainen tili: https://www.goatcounter.com/  (valitse oma koodi, esim. ellijama)
+     2) Laita koodisi alle. Näet sitten tilastot osoitteessa https://KOODISI.goatcounter.com
+     Tyhjänä seuranta on pois päältä eikä mitään lähetetä mihinkään. */
+  const GOATCOUNTER_CODE = ""; // esim. "ellijama"
+  (function initAnalytics() {
+    if (!GOATCOUNTER_CODE) return;
+    window.goatcounter = { no_onload: true };
+    const s = document.createElement("script");
+    s.async = true; s.src = "//gc.zgo.at/count.js";
+    s.setAttribute("data-goatcounter", "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count");
+    s.onload = () => track("avasi-pelin");
+    document.head.appendChild(s);
+  })();
+  function track(name) { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title: name, event: true }); } catch (e) {} }
+
   function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("active")); el(id).classList.add("active"); }
   function showOverlay(emoji, title, text, onAgain) {
     el("ovEmoji").textContent = emoji; el("ovTitle").textContent = title; el("ovText").textContent = text;
@@ -353,14 +369,15 @@
       return;
     }
     el("lock").textContent = "💛"; el("pwError").textContent = "";
+    track("kirjautui");
     setTimeout(() => show("menuScreen"), 250);
   }
   el("startBtn").addEventListener("click", unlock);
   el("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
 
   /* ---------- Menu ---------- */
-  el("pickConnect").addEventListener("click", () => { show("gameScreen"); newGame(); });
-  el("pickPenalty").addEventListener("click", () => { show("penaltyScreen"); startPenalty(); });
+  el("pickConnect").addEventListener("click", () => { track("pelasi-neljansuora"); show("gameScreen"); newGame(); });
+  el("pickPenalty").addEventListener("click", () => { track("pelasi-rangaistus"); show("penaltyScreen"); startPenalty(); });
   el("toMenu1").addEventListener("click", () => show("menuScreen"));
   el("toMenu2").addEventListener("click", () => show("menuScreen"));
 
