@@ -145,6 +145,22 @@
 
   .hint { font-size: 12px; color: var(--muted); opacity: 0.8; text-align: center; }
 
+  .lock {
+    font-size: 34px; text-align: center; margin-bottom: 6px;
+    filter: drop-shadow(0 4px 10px rgba(220,185,142,0.35));
+  }
+  .pw-error {
+    min-height: 16px; margin: 10px 0 0; text-align: center;
+    font-size: 13px; color: #e79aa4; font-weight: 500;
+  }
+  .shake { animation: shake 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+  @keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-7px); }
+    40%, 60% { transform: translateX(7px); }
+  }
+
   /* Scoreboard */
   .scoreboard { display: flex; align-items: stretch; gap: 11px; width: 100%; }
   .player {
@@ -265,17 +281,17 @@
     <h1 id="mainTitle">Meidän peli</h1>
   </div>
 
-  <!-- START -->
+  <!-- START / LOGIN -->
   <section class="screen active" id="startScreen">
-    <p class="subtitle" id="startSub">Pieni peli, jossa pelaat minua vastaan — vaikka en juuri nyt olisikaan vieressäsi.</p>
+    <p class="subtitle" id="startSub">Tämä peli on vain sinulle, Elli. Syötä salasana avataksesi sen. 💛</p>
     <div class="card">
-      <label for="herName">Sinun nimesi</label>
-      <input type="text" id="herName" placeholder="esim. Rakas" maxlength="16" autocomplete="off" />
-      <label for="hisName">Vastustajasi — minä</label>
-      <input type="text" id="hisName" placeholder="esim. Sinun rakkaasi" maxlength="16" autocomplete="off" />
-      <button class="btn-primary" id="startBtn">Aloita peli</button>
+      <div class="lock" id="lock">🔒</div>
+      <label for="pw">Salasana</label>
+      <input type="password" id="pw" inputmode="numeric" autocomplete="off" placeholder="• • • • • • • •" />
+      <button class="btn-primary" id="startBtn">Avaa peli</button>
+      <p class="pw-error" id="pwError"></p>
     </div>
-    <p class="hint">Yhdistä neljä omaa nappulaa riviin — pysty, vaaka tai vino.</p>
+    <p class="hint">Vihje: meille tärkeä päivämäärä — muodossa ppkkvvvv 🤍</p>
   </section>
 
   <!-- GAME -->
@@ -354,9 +370,11 @@
     "Tasan meni. Pidetään tää meidän pikku salaisuutena 😉"
   ];
 
+  const PASSWORD = "27112022";
+
   let grid = [], current = YOU, busy = false, gameOver = false;
   let scores = { you: 0, bot: 0 }, noteIndex = 0;
-  let names = { her: "Sinä", his: "Robotti" };
+  let names = { her: "Elli", his: "Jama" };
 
   const el = (id) => document.getElementById(id);
   const boardEl = el("board"), statusEl = el("status"), noteEl = el("note");
@@ -380,18 +398,29 @@
     el(id).classList.add("active");
   }
 
-  el("startBtn").addEventListener("click", () => {
-    const her = el("herName").value.trim() || "Sinä";
-    const his = el("hisName").value.trim() || "Robottini";
-    names.her = her; names.his = his;
-    el("youName").textContent = her;
-    el("botName").textContent = his.length > 14 ? his.slice(0, 14) : his;
-    el("foot").textContent = his + " pelaa puolestani — tehty rakkaudella sinulle, " + her + ".";
+  function unlock() {
+    const val = el("pw").value.trim();
+    if (val !== PASSWORD) {
+      const card = el("pw").closest(".card");
+      card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+      el("pwError").textContent = "Hmm, väärä salasana 😏 yritä uudestaan, Elli";
+      el("lock").textContent = "❌";
+      setTimeout(() => { el("lock").textContent = "🔒"; }, 900);
+      el("pw").select();
+      return;
+    }
+    el("lock").textContent = "💛";
+    el("pwError").textContent = "";
+    el("youName").textContent = names.her;
+    el("botName").textContent = names.his;
+    el("foot").textContent = names.his + " pelaa puolestani — tehty rakkaudella sinulle, " + names.her + ".";
     scores = { you: 0, bot: 0 };
     updateScores();
-    show("gameScreen");
-    newGame();
-  });
+    setTimeout(() => { show("gameScreen"); newGame(); }, 250);
+  }
+
+  el("startBtn").addEventListener("click", unlock);
+  el("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
 
   el("restartBtn").addEventListener("click", newGame);
   el("ovBtn").addEventListener("click", () => { el("overlay").classList.remove("active"); newGame(); });
