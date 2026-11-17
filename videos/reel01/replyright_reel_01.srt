@@ -1,0 +1,56 @@
+1
+00:00:00,250 --> 00:00:01,575
+Someone texts you,
+
+2
+00:00:01,725 --> 00:00:04,399
+I had a really good time tonight.
+
+3
+00:00:04,899 --> 00:00:09,062
+And now you're rewriting the same reply, five times.
+
+4
+00:00:09,212 --> 00:00:10,664
+Too eager?
+
+5
+00:00:10,814 --> 00:00:12,277
+Too dry?
+
+6
+00:00:12,427 --> 00:00:13,876
+You know what you mean.
+
+7
+00:00:14,026 --> 00:00:16,459
+You just can't find the words.
+
+8
+00:00:16,609 --> 00:00:20,151
+Imagine pasting their message into ReplyRight,
+
+9
+00:00:20,301 --> 00:00:22,373
+picking warm and confident,
+
+10
+00:00:22,523 --> 00:00:26,009
+and getting a reply that actually sounds like you.
+
+11
+00:00:26,409 --> 00:00:28,078
+I had a great time too.
+
+12
+00:00:28,228 --> 00:00:30,546
+I'd love to see you again.
+
+13
+00:00:33,846 --> 00:00:35,353
+Want early access?
+
+14
+00:00:35,503 --> 00:00:37,320
+Comment REPLY.
+
