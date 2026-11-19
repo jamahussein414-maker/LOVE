@@ -12,7 +12,7 @@ if (mode === "stills") {
   }
 } else {
   let last = -1;
-  await renderMedia({ serveUrl, composition, codec: "h264", crf: 16, x264Preset: "medium", pixelFormat: "yuv420p", muted: true,
+  await renderMedia({ serveUrl, composition, codec: "h264", crf: 14, x264Preset: "slow", pixelFormat: "yuv420p", muted: true,
     outputLocation: "out/video.mp4", browserExecutable, concurrency: 4, chromiumOptions: { gl: "swangle" },
     onProgress: ({ progress }) => { const p = Math.floor(progress * 20); if (p !== last) { last = p; console.log(`render ${p * 5}%`); } } });
 }

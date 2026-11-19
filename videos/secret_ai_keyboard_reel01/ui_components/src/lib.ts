@@ -27,28 +27,27 @@ export const mix = (a: number, b: number, k: number) => a + (b - a) * k;
 
 // ---------- the single interaction timeline (seconds), anchored to narration ----------
 export const T = {
-  incoming: 0.25, hookA: 0.5, hookB: 2.85,
-  composerTap1: 2.9, kbUp1: 3.0,
+  incoming: 0.08, hookA: 0.25, hookB: 1.85,
+  composerTap1: 1.95, kbUp1: 2.05,
   drafts: [
-    { text: "haha maybe saturday?", a: 3.6, b: 5.6, hold: 6.3, del: 6.85 },
-    { text: "Whenever you want 😂", a: 7.1, b: 8.8, hold: 9.5, del: 9.95 },
+    { text: "haha maybe saturday?", a: 2.45, b: 3.85, hold: 4.35, del: 4.75 },
+    { text: "Whenever you want 😂", a: 4.95, b: 6.0, hold: 6.35, del: 6.6 },
   ],
-  dismissTap: 12.7, kbDown: 12.8,
-  longPress: 13.6, menuOpen: 14.15, copyTap: 15.0, menuClose: 15.15, copiedHint: 15.25,
-  composerTap2: 16.2, kbUp2: 16.3,
-  globeDown: 17.0, switcherOpen: 17.25, slideA: 17.6, slideB: 18.0, globeUp: 18.3,
-  swapA: 18.32, swapB: 18.67,
-  pasteTap: 19.55, pasted: 19.6,
-  flirtyTap: 23.45,
-  generateTap: 24.3, genA: 24.35, genB: 25.35,
-  useTap: 30.0, inserted: 30.12,
-  zoomA: 32.9, zoomB: 36.6,
-  endA: 37.6, endB: 38.2,
-  headline: 38.35, cta: 40.1, soon: 40.9,
+  dismissTap: 6.75, kbDown: 6.85,
+  longPress: 7.15, menuOpen: 7.65, copyTap: 8.35, menuClose: 8.5, copiedHint: 8.6,
+  composerTap2: 9.05, kbUp2: 9.15,
+  globeDown: 9.65, switcherOpen: 9.9, slideA: 10.2, slideB: 10.55, globeUp: 10.8,
+  swapA: 10.82, swapB: 11.15,
+  pasteTap: 11.8, pasted: 11.85,
+  flirtyTap: 14.0,
+  generateTap: 14.85, genA: 14.9, genB: 15.85, streamB: 16.75,
+  useTap: 20.85, flyA: 20.95, flyB: 21.42, inserted: 21.38,
+  endA: 25.3, endB: 25.8,
+  less: 25.85, more: 26.95, cta: 28.6, soon: 29.5,
 };
 
 export const INCOMING = "So when are you taking me on a date? 😉";
-export const REPLY = "That depends. Are you free this Saturday? 😉";
+export const REPLY = "I was wondering when you’d ask 😌 Saturday?";
 
 /** human-like typing: uneven per-character timing, spaces slightly longer */
 export const charTimes = (text: string, a: number, b: number, seed: number) => {
@@ -91,4 +90,4 @@ export const keyboardAt = (t: number) => {
   return { raised, rr };
 };
 
-export const EMOJI: Record<string, string> = { "😉": "1f609", "😂": "1f602", "😊": "1f60a" };
+export const EMOJI: Record<string, string> = { "😉": "1f609", "😂": "1f602", "😊": "1f60a", "😌": "1f60c" };

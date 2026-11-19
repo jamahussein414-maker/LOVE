@@ -3,21 +3,19 @@ from kokoro_onnx import Kokoro
 K = Kokoro(sys.argv[1] + "/kokoro-v1.0.onnx", sys.argv[1] + "/voices-v1.0.bin")
 VOICE = sys.argv[2]
 L = [  # (spoken, caption, speed)
- ("Okay. They just sent this.", "Okay… they just sent THIS.", 0.97),
- ("And somehow, you're rewriting the same reply again.", "And somehow, you’re rewriting the same reply again.", 0.9),
- ("There's a much easier way.", "There’s a much easier way.", 0.9),
- ("Just copy their message.", "Just copy their message.", 0.9),
- ("Then open your AI keyboard.", "Then open your AI keyboard.", 0.9),
- ("Paste it in.", "Paste it in.", 0.9),
- ("Pick your vibe.", "Pick your vibe.", 0.9),
- ("Let's go with flirty.", "Let’s go with flirty.", 0.92),
- ("And there you go.", "And there you go.", 0.92),
- ("Something you'd actually send.", "Something you’d actually send.", 0.9),
- ("One tap, and it's right in your message box.", "One tap, and it’s right in your message box.", 0.9),
- ("No switching apps.", "No switching apps.", 0.9),
- ("No overthinking.", "No overthinking.", 0.9),
- ("Text with confidence.", "Text with confidence.", 0.9),
- ("Comment, text, for early access.", "Comment TEXT for early access.", 0.9),
+ ("Okay... they just sent this.", "Okay… they just sent THIS.", 1.0),
+ ("And now I'm rewriting the same reply. Again.", "And now I’m rewriting the same reply. Again.", 1.0),
+ ("So here's my trick.", "So here’s my trick.", 0.98),
+ ("Copy their message.", "Copy their message.", 0.97),
+ ("Switch to my AI keyboard.", "Switch to my AI keyboard.", 0.97),
+ ("Paste it,", "Paste it,", 0.97),
+ ("pick a vibe... flirty, obviously.", "pick a vibe… flirty, obviously.", 0.95),
+ ("And look at that!", "And look at that!", 1.0),
+ ("I was wondering when you'd ask. Saturday?", "“I was wondering when you’d ask 😌 Saturday?”", 0.95),
+ ("One tap, and it's right in my message box.", "One tap, and it’s right in my message box.", 0.98),
+ ("No switching apps.", "No switching apps.", 0.97),
+ ("Less overthinking. More confidence.", "Less overthinking. More confidence.", 0.92),
+ ("Comment, text, for early access!", "Comment TEXT for early access.", 0.95),
 ]
 out = []
 for i, (sp, cap, spd) in enumerate(L):

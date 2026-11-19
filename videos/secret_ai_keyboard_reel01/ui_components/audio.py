@@ -1,10 +1,10 @@
 import json, subprocess, numpy as np, soundfile as sf
 from scipy.signal import lfilter
 TL = json.load(open("src/timeline.json")); END = TL["end"]; SR = 48000
-T = dict(incoming=0.25, hookA=0.5, composerTap1=2.9, dismissTap=12.7, longPress=13.6, menuOpen=14.15, copyTap=15.0,
-         composerTap2=16.2, globeDown=17.0, swapA=18.32, pasteTap=19.55, flirtyTap=23.45, generateTap=24.3, genB=25.35,
-         useTap=30.0, inserted=30.12, endA=37.6, headline=38.35, cta=40.1)
-DRAFTS = [("haha maybe saturday?", 3.6, 5.6, 6.3, 6.85), ("Whenever you want 😂", 7.1, 8.8, 9.5, 9.95)]
+T = dict(incoming=0.08, hookA=0.25, composerTap1=1.95, dismissTap=6.75, longPress=7.15, menuOpen=7.65, copyTap=8.35,
+         composerTap2=9.05, globeDown=9.65, swapA=10.82, pasteTap=11.8, flirtyTap=14.0, generateTap=14.85, genB=15.85,
+         useTap=20.85, inserted=21.38, endA=25.3, headline=25.85, cta=28.6)
+DRAFTS = [("haha maybe saturday?", 2.45, 3.85, 4.35, 4.75), ("Whenever you want 😂", 4.95, 6.0, 6.35, 6.6)]
 def char_times(text, a, b, seed):
     s = seed * 9301 + 49297
     def rnd():
@@ -47,7 +47,7 @@ add(fx, chime((1046.5, 1568.0), 0.024, 0.7), T["incoming"])
 add(fx, whoosh(0.3, 0.02), T["hookA"] - 0.05)
 for k in ["composerTap1", "dismissTap", "copyTap", "composerTap2", "pasteTap", "flirtyTap", "generateTap", "useTap"]: add(fx, tick(1400, 0.03), T[k])
 add(fx, tick(900, 0.02), T["menuOpen"]); add(fx, tick(900, 0.02), T["swapA"])
-add(fx, chime((1318.5, 1975.5), 0.016, 0.9), T["genB"]); add(fx, whoosh(0.35, 0.025), T["inserted"] - 0.05)
+add(fx, chime((1318.5, 1975.5), 0.02, 0.9), T["genB"]); add(fx, chime((1568.0, 2349.3), 0.012, 0.5), T["flirtyTap"]); add(fx, whoosh(0.45, 0.03), T["useTap"] + 0.1); add(fx, chime((1046.5, 1568.0), 0.014, 0.6), T["inserted"])
 add(fx, chime((1046.5, 1568.0, 2093.0), 0.018, 1.6), T["headline"]); add(fx, chime((1318.5, 1975.5), 0.016, 1.2), T["cta"])
 # original ambient pad (generated here)
 chords = [[261.63, 329.63, 392.0, 493.88], [220.0, 261.63, 329.63, 392.0], [174.61, 220.0, 261.63, 329.63], [196.0, 246.94, 293.66, 392.0]]
@@ -61,7 +61,7 @@ for k in range(int(END / seg) + 2):
 kk = np.exp(-2 * np.pi * 1200 / SR); pad = lfilter([1 - kk], [1, -kk], pad).astype(np.float32); pad /= np.abs(pad).max()
 env = np.convolve(np.abs(voice), np.ones(int(0.3 * SR)) / int(0.3 * SR), "same"); duck = 1 - 0.55 * np.clip(env / 0.05, 0, 1)
 fade = np.clip(x / 2.0, 0, 1) * np.clip((END - x) / 3.0, 0, 1)
-mix = voice + fx + pad * duck * fade * 0.06
+mix = voice + fx + pad * duck * fade * 0.065
 sf.write("out/female_voiceover.wav", (voice / max(1e-6, np.abs(voice).max()) * 0.89).astype(np.float32), SR, subtype="PCM_24")
 sf.write("out/premaster.wav", mix.astype(np.float32), SR, subtype="FLOAT")
 r = subprocess.run(["ffmpeg", "-hide_banner", "-i", "out/premaster.wav", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
